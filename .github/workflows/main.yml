@@ -28,7 +28,8 @@ jobs:
         tags: 925136366616.dkr.ecr.ap-northeast-1.amazonaws.com/blog_rails:latest:latest
 
     - name: Deploy to ECS
-      uses: aws-actions/amazon-ecs-run-task@v1
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        cluster: blog-rails
         task-definition: blog_task
+        service: blog
+        cluster: blog-rails
