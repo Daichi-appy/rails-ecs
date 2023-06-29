@@ -5,6 +5,13 @@ on:
     branches:
       - main
 
+env:
+  ECR_REGISTORY: "925136366616.dkr.ecr.ap-northeast-1.amazonaws.com/blog_nginx:latest"
+  ECR_REPO_NAME_NGINX: "blog_nginx"
+  ECR_REPO_NAME_RAILS: "blog_rails"
+  ECS_CLUSTER: "blog-rails"
+  ECS_SERVICE: "blog"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,16 +27,31 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-1
 
-    - name: Build and push Docker image
+    - name: docker login
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.ECR_REGISTRY }}
+
+    # nginx
+    - name: build and push nginx
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          no-cache: true
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME_NGINX }}:latest
+          context: .
+          file: ./prd/nginx/Dockerfile
+    
+    # rails
+    - name: build and push nginx
       uses: docker/build-push-action@v2
       with:
-        context: prd
+        context: .
         push: true
-        tags: 925136366616.dkr.ecr.ap-northeast-1.amazonaws.com/blog_rails:latest:latest
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME_RAILS }}:latest
+        file: ./prd/Dockerfile
 
-    - name: Deploy to ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: blog_task
-        service: blog
-        cluster: blog-rails
+     # update ecs service
+      - name: update ecs service
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
