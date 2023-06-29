@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  ECR_REGISTORY: "925136366616.dkr.ecr.ap-northeast-1.amazonaws.com"
+  ECR_REGISTRY: "925136366616.dkr.ecr.ap-northeast-1.amazonaws.com"
   ECR_REPO_NAME_NGINX: "blog_nginx"
   ECR_REPO_NAME_RAILS: "blog_rails"
   ECS_CLUSTER: "blog-rails"
@@ -32,7 +32,7 @@ jobs:
       - name: docker login
         uses: docker/login-action@v2
         with:
-          registry: ${{ env.ECR_REGISTORY }}
+          registry: ${{ env.ECR_REGISTRY }}
 
       # nginx
       - name: build and push nginx
