@@ -27,10 +27,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-1
 
-    - name: docker login
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.ECR_REGISTRY }}
+  - name: docker login
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.ECR_REGISTRY }}
 
     # nginx
     - name: build and push nginx
