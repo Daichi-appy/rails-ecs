@@ -28,19 +28,19 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: docker login
-          uses: docker/login-action@v2
-          with:
-            registry: ${{ env.ECR_REGISTRY }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.ECR_REGISTRY }}
 
       # nginx
       - name: build and push nginx
-          uses: docker/build-push-action@v3
-          with:
-            push: true
-            no-cache: true
-            tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME_NGINX }}:latest
-            context: .
-            file: ./prd/nginx/Dockerfile
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          no-cache: true
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME_NGINX }}:latest
+          context: .
+          file: ./prd/nginx/Dockerfile
       
       # rails
       - name: build and push nginx
@@ -51,7 +51,7 @@ jobs:
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO_NAME_RAILS }}:latest
           file: ./prd/Dockerfile
 
-      # update ecs service
-        - name: update ecs service
-          run: |
-            aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
+    # update ecs service
+      - name: update ecs service
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
