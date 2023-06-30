@@ -13,8 +13,12 @@ class BlogsController < ApplicationController
     Blog.create(blog_params)
     head :created
   end
+
+  def test
+    render json: { message: 'success' }
+  end
  
-   private
+  private
  
   def blog_params
     params.require(:blog).permit(:title, :contents)
