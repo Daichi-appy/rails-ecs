@@ -17,6 +17,10 @@ class BlogsController < ApplicationController
   def test
     render json: { message: 'success' }
   end
+
+  def test2
+    render json: { message: 'success2' }
+  end
  
   private
  
